@@ -50,6 +50,14 @@ function Git_PullScripts {
   echo
 }
 
+## 更新docker-entrypoint
+function Update_Entrypoint {
+  if [[ $(cat ${ShellDir}/docker/docker-entrypoint.sh) != $(cat /usr/local/bin/docker-entrypoint.sh) ]]; then
+    cp -f ${ShellDir}/docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+    chmod 777 /usr/local/bin/docker-entrypoint.sh
+  fi
+}
+
 ## 获取用户数量 UserSum
 function Count_UserSum {
   i=1
@@ -288,6 +296,7 @@ if [ ${ExitStatusShell} -eq 0 ]; then
   [ -f ${ScriptsDir}/package.json ] && PackageListOld=$(cat ${ScriptsDir}/package.json)
   [ -d ${ScriptsDir}/.git ] && Git_PullScripts || Git_CloneScripts
   sed -i '/本脚本开源免费使用 By/d' ${ScriptsDir}/sendNotify.js
+  [[ ${JD_DIR} ]] && Update_Entrypoint
 fi
 
 ## 执行各函数
